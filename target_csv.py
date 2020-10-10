@@ -9,7 +9,6 @@ import csv
 import threading
 import http.client
 import urllib
-from datetime import datetime
 import collections
 import pkg_resources
 
@@ -57,8 +56,6 @@ def persist_messages(delimiter, quotechar, messages, destination_path):
     key_properties = {}
     validators = {}
 
-    now = datetime.now().strftime('%Y%m%dT%H%M%S')
-
     for message in messages:
         try:
             o = singer.parse_message(message).asdict()
@@ -73,7 +70,7 @@ def persist_messages(delimiter, quotechar, messages, destination_path):
 
             validators[o['stream']].validate(o['record'])
 
-            filename = o['stream'] + '-' + now + '.csv'
+            filename = o['stream'] + '.csv'
             filename = os.path.expanduser(os.path.join(destination_path, filename))
             file_is_empty = (not os.path.isfile(filename)) or os.stat(filename).st_size == 0
 
