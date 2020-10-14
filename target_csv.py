@@ -78,7 +78,7 @@ def persist_messages(delimiter, quotechar, messages, destination_path, validate_
             flattened_record = flatten(o['record'])
 
             headers = get_headers(schemas[o['stream']])
-            with open(filename, 'w') as csvfile:
+            with open(filename, 'a') as csvfile:
                 writer = csv.DictWriter(csvfile,
                                         headers,
                                         extrasaction='ignore',
@@ -98,6 +98,12 @@ def persist_messages(delimiter, quotechar, messages, destination_path, validate_
             schemas[stream] = o['schema']
             validators[stream] = Draft4Validator(o['schema'])
             key_properties[stream] = o['key_properties']
+
+            # Delete previous content of the file
+            filename = o['stream'] + '.csv'
+            filename = os.path.expanduser(os.path.join(destination_path, filename))
+            if os.path.isfile(filename):
+                os.remove(filename)
         else:
             logger.warning("Unknown message type {} in message {}"
                             .format(o['type'], o))
