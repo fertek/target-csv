@@ -78,7 +78,7 @@ def persist_messages(delimiter, quotechar, messages, destination_path, validate_
             flattened_record = flatten(o['record'])
 
             headers = get_headers(schemas[o['stream']])
-            with open(filename, 'a') as csvfile:
+            with open(filename, 'w') as csvfile:
                 writer = csv.DictWriter(csvfile,
                                         headers,
                                         extrasaction='ignore',
